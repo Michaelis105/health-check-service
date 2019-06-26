@@ -1,0 +1,2 @@
+rootProject.name = 'health-check-service'
+include ':server', ':web'

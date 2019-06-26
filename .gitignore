@@ -1,3 +1,18 @@
+######## Health Check Service ########
+
+# Gradle project-specific cache directory
+.gradle
+
+# Gradle build output directory
+build
+
+# Webpack/NPM dependencies
+node_modules
+
+# Production build UI files from WebPack/NPM
+web/dist
+server/src/main/resources/static
+
 # Compiled class file
 *.class
 
@@ -21,3 +36,8 @@
 
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
+
+
+######## IDE-specific ########
+
+.idea
