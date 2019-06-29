@@ -1,0 +1,8 @@
+healthCheckTimeoutThreshold: 10 # In seconds
+domain: ".domain.com"
+services: # "-" = undefined instead of Java null
+  - name: "service"
+    protocol: "http"
+    subdomain: "subdomain"
+    endpoint: "/healthCheckEndPoint"
+suppress: # Remove these in the future
