@@ -1,0 +1,74 @@
+repositories {
+    mavenCentral()
+}
+
+buildscript {
+    repositories {
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
+    }
+
+    dependencies {
+        classpath "com.moowork.gradle:gradle-node-plugin:1.2.0"
+    }
+}
+
+// 'Imports' assemble task so that parent assemble call compiles the UI
+apply plugin: 'java'
+
+// Jar is irrelevant for UI, build files will be copied to Spring's resources
+jar.enabled = false
+
+node {
+
+    version = '12.1.0' // Node version
+    npmVersion = '6.9.0'
+
+    // Download node using parameters above, else use globally installed version
+    download = true
+}
+
+// Copmiles VueJS into production build artifacts
+// gradle-node-plugin treats npm commmands as form of ./gradlew npm_<command>
+npm_run_build {
+    dependsOn npm_install
+
+    inputs.files fileTree("public")
+    inputs.files fileTree("src")
+    inputs.file "package.json"
+    inputs.file "package-lock.json"
+    outputs.dir 'dist'
+}
+
+// Packages compiled VUeJS artifacts into single package.
+task packageNpmApp(type: Zip) {
+    dependsOn npm_run_build
+    from ("dist") {
+        into "static" // Spring-specific directory name
+    }
+    archiveFileName = 'healthcheck_dashboard_vue.zip'
+    destinationDirectory = file("$buildDir")
+}
+
+// Extract VueJS package into server's webpage directory
+task unpackIntoServerResources(type: Copy) {
+    dependsOn packageNpmApp
+    from zipTree ("$buildDir/healthcheck_dashboard_vue.zip")
+    into project(':server'.file('src/main/resources')) // Where Spring expects web content
+}
+
+// Rebuilds frontend on gradle call to build entire project
+processResources.dependsOn(unpackIntoServerResources)
+
+// Delete production build and NPM dependencies.
+clean {
+    file("$projectDir/dist").deleteDir()
+    file("$projectDir/node_modules").deleteDir()
+}
+
+// Deletes local NPM.
+task cleanAll {
+    dependsOn clean
+    file("$projectDir/.gradle").deleteDir()
+}
