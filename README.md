@@ -14,7 +14,7 @@ Spring-based health check web service with Vue UI
 
 ### Viewing
 ```Shell
-localhost:8080/dt
+localhost:8080
 ```
 
 ### Publishing
