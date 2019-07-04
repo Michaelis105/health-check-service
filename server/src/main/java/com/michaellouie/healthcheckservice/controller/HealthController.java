@@ -1,5 +1,8 @@
 package com.michaellouie.healthcheckservice.controller;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,6 +18,7 @@ import com.michaellouie.healthcheckservice.service.HealthCheckService;
  */
 @RestController
 @RequestMapping("api")
+@Api(description = "Set of endpoints for obtaining various services' health statuses")
 public class HealthController {
 
     private final Logger _log = LoggerFactory.getLogger(HealthController.class);
@@ -24,6 +28,7 @@ public class HealthController {
 
     @CrossOrigin(origins = "*")
     @RequestMapping(value = "/forcedHealthCheckSync", method = RequestMethod.GET)
+    @ApiOperation(value = "Force evict health check statuses in cache and update with latest service health check information.")
     public StatusResponse forcedHealthCheckSync() {
         _log.trace("Enter...");
         StatusResponse statusResponse = healthCheckService.syncHealthStatuses();
@@ -33,7 +38,9 @@ public class HealthController {
 
     @CrossOrigin(origins = "*")
     @RequestMapping(value = "/healthCheckByServiceName", method = RequestMethod.GET)
+    @ApiOperation(value = "Retrieves health check status for a specific service.")
     public HealthStatusResponse healthCheckByServiceName(
+            @ApiParam(name =  "servicename", value = "${swagger.controller.serviceNameDescription}")
             @RequestParam(value = "servicename", required = false) String serviceName) {
         _log.trace("Enter with servicename: " + serviceName);
         HealthStatusResponse healthStatusResponse = healthCheckService.getHealthStatusByServiceName(serviceName);
@@ -42,7 +49,8 @@ public class HealthController {
     }
 
     @CrossOrigin(origins = "*")
-    @RequestMapping(value = "/healthCheckALl", method = RequestMethod.GET)
+    @RequestMapping(value = "/healthCheckAll", method = RequestMethod.GET)
+    @ApiOperation(value = "Retrieves health check statuses for all known services.")
     public HealthStatusResponse healthCheckAll() {
         _log.trace("Enter...");
         HealthStatusResponse healthStatusResponses = healthCheckService.getHealthStatusAll();

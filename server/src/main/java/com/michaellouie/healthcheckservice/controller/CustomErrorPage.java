@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.context.request.WebRequest;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * Routes all requests with errors to respective paths.
  */
@@ -21,24 +23,28 @@ public class CustomErrorPage implements ErrorController {
 
     private final Logger _log = LoggerFactory.getLogger(CustomErrorPage.class);
 
+    String errorPageFileName = "err.html";
+
     @ExceptionHandler({
             Exception.class
     })
     public final ResponseEntity<String> handleException(Exception ex, WebRequest request) {
-        _log.error("Exception", ex);
+        _log.error("Exception...", ex);
         return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @Override
     public String getErrorPath() {
         _log.error("Redirect to error");
-        return "error";
+        return errorPageFileName;
     }
 
     @RequestMapping("/error")
-    public String handleError() {
-        _log.error("Error out for some reason...");
-        return "error";
+    public String handleError(HttpServletRequest request) {
+        _log.error("Error for URI: " + request.getRequestURI() +
+                " , status code: " + (Integer) request.getAttribute("javax.servlet.error.status_code") +
+                " , exception: " + (Exception) request.getAttribute("javax.servlet.error.exception"));
+        return errorPageFileName;
     }
 
 }

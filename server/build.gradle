@@ -20,6 +20,9 @@ dependencies {
 
     compile 'org.slf4j:slf4j-api:1.7.25'
     compile 'commons-io:commons-io:2.6'
+    
+    compile group: 'io.springfox', name: 'springfox-swagger2', version: '2.9.2'
+    compile group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.9.2'
 
     //runtimeOnly project(':web')
 }

@@ -29,7 +29,7 @@
         },
         methods: {
             getHealthStatuses: function() {
-                axios.get("httpL//localhost:1111/api/healthCHeckAll").then(response => {
+                axios.get("http://localhost:1111/api/healthCheckAll").then(response => {
                     this.healthResponse = response
                 }).catch(error => {
                     this.healthErrorReason = error

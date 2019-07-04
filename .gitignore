@@ -12,6 +12,7 @@ node_modules
 # Production build UI files from WebPack/NPM
 web/dist
 server/src/main/resources/static
+*.war
 
 # Compiled class file
 *.class
